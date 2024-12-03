@@ -1,14 +1,13 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Services\MovieService;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/asd', function () {
-    return view('home');
+Route::get('/', function (MovieService $movieService) {
+    $trending = $movieService->getTrending();
+    return view('home', ['trending' => $trending]);
 });
 
 Route::get('/dashboard', function () {

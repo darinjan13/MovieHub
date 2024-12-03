@@ -45,7 +45,7 @@ class AuthenticatedSessionController extends Controller
 
         $user = $request->user();
 
-        // Mail::to($user->email)->send(new SampleEmail($user));
+        // Mail::to($user->email)->send(new );
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

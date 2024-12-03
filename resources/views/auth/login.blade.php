@@ -46,75 +46,48 @@
     </form>
 </x-guest-layout> --}}
 
-<!DOCTYPE html>
-<html lang="en">
+<x-guest-layout>
+    @if (session('status'))
+        <div class="mb-4 text-green-500 text-center">{{ session('status') }}</div>
+    @endif
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign in</title>
-    @vite('resources/css/app.css')
-    <style>
-        body {
-            background-image: url('{{ asset('assets/images/home-background.jpg') }}');
-            background-size: cover;
-            background-position: center;
-        }
-    </style>
-</head>
+    <form class="flex flex-col" method="POST" action="{{ route('login') }}">
+        <h1 class="text-white text-4xl font-bold mb-5">Sign In</h1>
+        @csrf
 
-<body>
-    <div class="flex items-center justify-center h-screen bg-gray-900/60">
-        <div
-            class="flex flex-wrap items-center justify-center rounded-lg xs:h-full lg:h-max xs:w-full lg:w-[450px] bg-black xs:p-3 md:p-20 md:mx-auto">
+        <div class="mb-4">
+            <input value="{{ old('email', $email ?? '') }}" type="email" name="email"
+                class="w-full p-2 mb-4 text-white bg-gray-800 border border-gray-700 rounded" placeholder="Email"
+                required value="{{ old('email') }}">
+            @error('email')
+                <div class="mt-2 text-red-500">{{ $message }}</div>
+            @enderror
+        </div>
 
-            @if (session('status'))
-                <div class="mb-4 text-green-500 text-center">{{ session('status') }}</div>
+        <div class="mb-4">
+            <input type="password" name="password"
+                class="w-full p-2 mb-4 text-white bg-gray-800 border border-gray-700 rounded" placeholder="Password"
+                required>
+            @error('password')
+                <div class="mt-2 text-red-500">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="flex items-center justify-between mt-4">
+            @if (Route::has('password.request'))
+                <a href="{{ route('password.request') }}"
+                    class="underline text-sm text-gray-300 hover:text-white hidden">
+                    Forgot your password?
+                </a>
             @endif
 
-            <form class="flex flex-col" method="POST" action="{{ route('login') }}">
-                <h1 class="text-white text-4xl font-bold mb-5">Sign In</h1>
-                @csrf
-
-                <div class="mb-4">
-                    <input value="{{ old('email', $email ?? '') }}" type="email" name="email"
-                        class="w-full p-2 mb-4 text-white bg-gray-800 border border-gray-700 rounded"
-                        placeholder="Email" required value="{{ old('email') }}">
-                    @error('email')
-                        <div class="mt-2 text-red-500">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <input type="password" name="password"
-                        class="w-full p-2 mb-4 text-white bg-gray-800 border border-gray-700 rounded"
-                        placeholder="Password" required>
-                    @error('password')
-                        <div class="mt-2 text-red-500">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="flex items-center justify-between mt-4">
-                    @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}"
-                            class="underline text-sm text-gray-300 hover:text-white hidden">
-                            Forgot your password?
-                        </a>
-                    @endif
-
-                    <button type="submit"
-                        class="w-full bg-red-600 text-white font-bold py-2 rounded hover:bg-red-700 transition duration-300">
-                        Log in
-                    </button>
-                </div>
-                <p class="mt-4 text-white text-center">No account? <a href="/register" class="underline">Register
-                        here.</a>
-            </form>
-
-
-            </p>
+            <button type="submit"
+                class="w-full bg-red-600 text-white font-bold py-2 rounded hover:bg-red-700 transition duration-300">
+                Log in
+            </button>
         </div>
-    </div>
-</body>
-
-</html>
+        <p class="mt-4 text-white text-center">No account? <a href="/register" class="underline">Register
+                here.</a>
+        </p>
+    </form>
+</x-guest-layout>

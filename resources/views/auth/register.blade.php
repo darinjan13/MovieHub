@@ -51,80 +51,53 @@
     </form>
 </x-guest-layout> --}}
 
-<!DOCTYPE html>
-<html lang="en">
+<x-guest-layout>
+    <form method="POST" action="{{ route('register') }}">
+        <h1 class="text-white text-4xl font-bold mb-5">Sign up</h1>
+        @csrf
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    @vite('resources/css/app.css')
-    <style>
-        body {
-            background-image: url('{{ asset('assets/images/home-background.jpg') }}');
-            background-size: cover;
-            background-position: center;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="flex items-center justify-center h-screen bg-gray-900/60">
-        <div
-            class="flex flex-wrap items-center justify-center rounded-lg xs:h-full lg:h-max xs:w-full lg:w-[450px] bg-black xs:p-3 md:p-20 md:mx-auto">
-
-            <form method="POST" action="{{ route('register') }}">
-                <h1 class="text-white text-4xl font-bold mb-5">Sign Up</h1>
-                @csrf
-
-                <div class="mb-4">
-                    <input type="text" name="name"
-                        class="w-full p-2 mb-4 text-white bg-gray-800 border border-gray-700 rounded" placeholder="Name"
-                        required value="{{ old('name') }}">
-                    @error('name')
-                        <div class="mt-2 text-red-500">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <input value="{{ old('email', $email ?? '') }}" type="email" name="email"
-                        class="w-full p-2 mb-4 text-white bg-gray-800 border border-gray-700 rounded"
-                        placeholder="Email" required value="{{ old('email') }}">
-                    @error('email')
-                        <div class="mt-2 text-red-500">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <input type="password" name="password"
-                        class="w-full p-2 mb-4 text-white bg-gray-800 border border-gray-700 rounded"
-                        placeholder="Password" required>
-                    @error('password')
-                        <div class="mt-2 text-red-500">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <input type="password" name="password_confirmation"
-                        class="w-full p-2 mb-4 text-white bg-gray-800 border border-gray-700 rounded"
-                        placeholder="Confirm Password" required>
-                    @error('password_confirmation')
-                        <div class="mt-2 text-red-500">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <button type="submit"
-                    class="w-full bg-red-600 text-white font-bold py-2 rounded hover:bg-red-700 transition duration-300">
-                    Sign Up
-                </button>
-                <p class="mt-4 text-white text-center">Already have an account? <a href="/login" class="underline">Log
-                        in
-                        here.</a></p>
-            </form>
-
-
+        <div class="mb-4">
+            <input type="text" name="name"
+                class="w-full p-2 mb-4 text-white bg-gray-800 border border-gray-700 rounded" placeholder="Name" required
+                value="{{ old('name') }}">
+            @error('name')
+                <div class="mt-2 text-red-500">{{ $message }}</div>
+            @enderror
         </div>
-    </div>
-</body>
 
-</html>
+        <div class="mb-4">
+            <input value="{{ old('email', $email ?? '') }}" type="email" name="email"
+                class="w-full p-2 mb-4 text-white bg-gray-800 border border-gray-700 rounded" placeholder="Email"
+                required value="{{ old('email') }}">
+            @error('email')
+                <div class="mt-2 text-red-500">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="mb-4">
+            <input type="password" name="password"
+                class="w-full p-2 mb-4 text-white bg-gray-800 border border-gray-700 rounded" placeholder="Password"
+                required>
+            @error('password')
+                <div class="mt-2 text-red-500">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="mb-4">
+            <input type="password" name="password_confirmation"
+                class="w-full p-2 mb-4 text-white bg-gray-800 border border-gray-700 rounded"
+                placeholder="Confirm Password" required>
+            @error('password_confirmation')
+                <div class="mt-2 text-red-500">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <button type="submit"
+            class="w-full bg-red-600 text-white font-bold py-2 rounded hover:bg-red-700 transition duration-300">
+            Sign Up
+        </button>
+        <p class="mt-4 text-white text-center">Already have an account? <a href="/login" class="underline">Log
+                in
+                here.</a></p>
+    </form>
+</x-guest-layout>

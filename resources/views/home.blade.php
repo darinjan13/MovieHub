@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Home</title>
-    @vite('resources/css/app.css')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="text-white">
+    <!-- Slider main container -->
     <div class="bg-cover bg-center" style="background-image: url('{{ asset('assets/images/home-background.jpg') }}');">
-        <div class="min-h-screen"
+        <div class="h-full"
             style="background: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.95));">
             <nav class="flex flex-wrap justify-between py-6">
                 <img class="h-10 ml-16" src="{{ asset('assets/images/logo.png') }}" alt="Logo" />
@@ -41,6 +42,24 @@
                         Get Started &gt;
                     </button>
                 </form>
+            </div>
+            <div class="mx-20">
+                <div class="swiper border">
+                    <!-- Additional required wrapper -->
+                    <div class="swiper-wrapper my-20">
+                        <!-- Slides -->
+                        @foreach ($trending['results'] as $movie)
+                            <div class="swiper-slide rounded-lg overflow-hidden transform transition-transform duration-500 hover:shadow-lg hover:scale-110"
+                                onmouseover="this.style.zIndex='100'" onmouseout="this.style.zIndex='0'">
+                                <x-movie-card :image_path="$movie['poster_path']" />
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <!-- If we need navigation buttons -->
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
             </div>
         </div>
     </div>
