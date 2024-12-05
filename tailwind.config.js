@@ -10,9 +10,13 @@ export default {
     ],
 
     theme: {
+        screens: {
+            'xs': '320px',
+            ...defaultTheme.screens,
+        },
         extend: {
-            screens: {
-                'xs': '480px',
+            backgroundImage: {
+                'bgImage': "url('/public/background.jpg')"
             },
         },
     },

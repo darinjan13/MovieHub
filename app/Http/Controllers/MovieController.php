@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\MovieService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -20,5 +21,12 @@ class MovieController extends Controller
         $popularMovies = $response->json();
 
         return view('movies.index', compact('popularMovies'));
+    }
+
+    public function showModal(Request $request)
+    {
+        $details = "";
+
+        return view('modal', compact('details'));
     }
 }
