@@ -6,11 +6,13 @@ import { Inertia } from '@inertiajs/inertia';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
-export default function AuthenticatedLayout({ header, children, subscribed, profilePage }) {
+export default function AuthenticatedLayout({ children, subscribed, profilePage }) {
 
     const user = usePage().props.auth.user;
     const { profileId } = usePage().props
     // const [profileId, setProfileId] = useState(null);
+    console.log(user);
+
 
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -23,7 +25,7 @@ export default function AuthenticatedLayout({ header, children, subscribed, prof
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="flex shrink-0 items-center md:ml-10">
-                                <Link href={profileId ? route('dashboard', { profileId: profileId }) : route("profiles.index")}>
+                                <Link href={profileId ? route('dashboard', { profileId: profileId }) : route("profiles.index", { user_id: user.id })}>
                                     <img className="block h-9 w-auto fill-current" src="/assets/images/logo.png" alt="Logo" />
                                 </Link>
                             </div>
@@ -76,7 +78,7 @@ export default function AuthenticatedLayout({ header, children, subscribed, prof
 
                                         <Dropdown.Content>
                                             <Dropdown.Link
-                                                href={route('profiles.index')}
+                                                href={route('profiles.index', { user_id: user.id })}
                                             >
                                                 Profiles
                                             </Dropdown.Link>
@@ -156,7 +158,7 @@ export default function AuthenticatedLayout({ header, children, subscribed, prof
                             href={route('dashboard', { profileId: profileId })}
                             active={route().current('dashboard')}
                         >
-                            Dashboards
+                            Dashboard
                         </ResponsiveNavLink>
                     )}
 

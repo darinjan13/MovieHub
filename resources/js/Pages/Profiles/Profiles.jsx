@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Create from '@/Pages/Profiles/Create';
 import ProfileAvatar from '@/Components/ProfileAvatar';
 
-export default function Profiles({ profiles, subscribed }) {
+export default function Profiles() {
 
+    const user = usePage().props.auth.user;
+
+    console.log(user);
     const [isModalOpen, setIsModalOpen] = useState(false); // State for controlling modal visibility
     let [isOpen, setIsOpen] = useState(false)
 
@@ -19,13 +22,13 @@ export default function Profiles({ profiles, subscribed }) {
     };
 
     return (
-        <AuthenticatedLayout subscribed={subscribed} profilePage={true}>
+        <AuthenticatedLayout subscribed={user.subscription_plan_id} profilePage={true}>
             <Head title='User Profiles' />
             <div className="bg-gray-800 text-white min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 md:px-8">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl mb-8">Who's watching MovieHub?</h1>
                 <div className="flex flex-wrap justify-center gap-8">
                     {/* Profile Avatars */}
-                    {profiles?.map(profile => {
+                    {user?.profiles?.map(profile => {
                         return <ProfileAvatar key={profile.profile_id} profile={profile} profileDashboard={() => profileDashboard(profile.profile_id)} />;
                     })}
                     <div className="flex flex-col items-center">
@@ -41,7 +44,7 @@ export default function Profiles({ profiles, subscribed }) {
             </div>
 
             {/* Modal */}
-            <Create isOpen={isOpen} onClose={() => setIsOpen(false)} />
+            <Create user_id={user.id} isOpen={isOpen} onClose={() => setIsOpen(false)} />
             {isModalOpen && (
                 <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
                     <div className="bg-white p-8 rounded-lg w-96">

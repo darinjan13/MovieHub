@@ -15,4 +15,9 @@ class Profile extends Model
     {
         return $this->belongsTo(User::class);  // A profile belongs to one user
     }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
 }

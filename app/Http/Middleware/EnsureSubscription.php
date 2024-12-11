@@ -19,9 +19,10 @@ class EnsureSubscription
         if (Auth::check()) {
             $isSubscribed = Auth::user()->subscription_plan_id;
             $hasProfiles = Auth::user()->profiles()->count() > 0;
+            $user_id = Auth::id();
 
             if ($request->routeIs('subscription.plans', 'welcome') && $isSubscribed) {
-                return redirect()->route('dashboard');
+                return redirect()->route('profiles.index', ['user_id' => $user_id]);
             }
 
             if (in_array($request->route()->getName(), ['dashboard', 'subscription.subscribe', 'profiles.index', 'settings.edit']) && !$isSubscribed) {

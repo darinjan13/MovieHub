@@ -14,8 +14,9 @@ class DashboardController extends Controller
     public function index($profileId, MovieService $movieService)
     {
         // Find the profile by ID, assuming it's valid and belongs to the logged-in user
-        $trending = $movieService->getTrending();
-        $popular = $movieService->getPopularMovies();
+        $trendings = $movieService->getTrending();
+        $popularMovies = $movieService->getPopularMovies(1);
+        $popularTVShows = $movieService->getTVShows(1);
         $profile = Profile::where('profile_id', $profileId)
             ->where('user_id', Auth::id())
             ->first();
@@ -26,11 +27,10 @@ class DashboardController extends Controller
 
 
         return inertia('Dashboard', [
-            'profileId' => $profileId,
-            'profile' => $profile,
             'subscribed' => Auth::user()->subscription_plan_id,
-            'movies' => $trending,
-            'popular' => $popular
+            'trendings' => $trendings,
+            'popularMovies' => $popularMovies,
+            'popularTVShows' => $popularTVShows
         ]);
     }
 }

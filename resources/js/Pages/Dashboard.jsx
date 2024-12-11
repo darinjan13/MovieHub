@@ -8,38 +8,35 @@ import 'swiper/swiper-bundle.css';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
+import { CustomLeftArrow, CustomRightArrow } from '@/Components/CustomArrows';
 
-export default function Dashboard({ subscribed, profile, movies, popular }) {
+export default function Dashboard({ subscribed, trendings, popularMovies, popularTVShows }) {
     const { profileId } = usePage().props
-    const moviesArray = Array.isArray(movies) ? movies : Object.values(movies);
-    console.log(popular);
-
+    // const trendingsArray = Array.isArray(trendings) ? trendings : Object.values(trendings);
+    console.log(popularTVShows.results);
 
     return (
         <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-white">
-                    Dashboard
-                </h2>
-            }
             subscribed={subscribed}
         >
             <Head title="Dashboard" />
-            <div>
-                <Swiper
-                    modules={[Navigation]}
-                    spaceBetween={1}
-                    slidesPerView={1}
-                    navigation
-                    className=''
-                >
-                    {moviesArray.map((movie) => (
-                        <SwiperSlide key={movie.id}>
-                            <DashboardMovieDisplay movie={movie} />
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
-                {/* <div className="swiper sm:h-full">
+            <div className='pb-10'>
+                <div>
+                    <Swiper
+                        modules={[Navigation]}
+                        spaceBetween={1}
+                        slidesPerView={1}
+                        className=''
+                    >
+                        {trendings.slice(0, 10).map((movie, index) => (
+                            <SwiperSlide key={movie.id}>
+                                <DashboardMovieDisplay movie={movie} index={index} />
+                            </SwiperSlide>
+                        ))}
+                        <CustomLeftArrow />
+                        <CustomRightArrow />
+                    </Swiper>
+                    {/* <div className="swiper sm:h-full">
                     <div className="swiper-wrapper">
                         
                     </div>
@@ -55,35 +52,118 @@ export default function Dashboard({ subscribed, profile, movies, popular }) {
                         </svg>
                     </div>
                 </div> */}
-            </div>
+                </div>
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-gray-900 shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-white">
-                            You're logged in! {profile.profile_name}
+                <div className=" space-y-5 sm:space-y-20">
+
+                    {/* Popular Movies */}
+                    <div className=" mb-10 px-1 sm:px-20 w-full">
+                        <div className="p-6 text-white font-bold sm:text-2xl w-fit cursor-pointer">
+                            <span className='flex flex-row items-center'>Popular Movies<svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-7 h-7"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={1}
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M9 5l7 7-7 7"
+                                />
+                            </svg>
+                            </span>
                         </div>
+                        <Swiper
+                            modules={[Navigation]}
+                            spaceBetween={10}
+                            slidesPerView={5}
+                            slidesPerGroup={1}
+                            className="relative"
+                        >
+                            {popularMovies.results.slice(0, 10).map((movie) => (
+                                <SwiperSlide key={movie.id} className="flex justify-center">
+                                    <MovieCard movie={movie} />
+                                </SwiperSlide>
+                            ))}
+                            <CustomLeftArrow />
+                            <CustomRightArrow />
+                        </Swiper>
+                    </div>
+
+                    {/* Popular TV Shows */}
+                    <div className="w-full mb-10 px-1 sm:px-20">
+                        <div className="p-6 text-white font-bold sm:text-2xl w-fit cursor-pointer">
+                            <span className='flex flex-row items-center'>Popular TV Shows<svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-7 h-7"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={1}
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M9 5l7 7-7 7"
+                                />
+                            </svg>
+                            </span>
+                        </div>
+                        <Swiper
+                            modules={[Navigation]}
+                            spaceBetween={10}
+                            slidesPerView={5}
+                            slidesPerGroup={1}
+                            className="relative"
+                        >
+                            {popularTVShows.results.slice(0, 10).map((movie) => (
+                                <SwiperSlide key={movie.id} className="flex justify-center">
+                                    <MovieCard movie={movie} />
+                                </SwiperSlide>
+                            ))}
+                            <CustomLeftArrow />
+                            <CustomRightArrow />
+                        </Swiper>
+                    </div>
+
+                    <div className="w-full mb-10 px-1 sm:px-20">
+                        <div className="p-6 text-white font-bold sm:text-2xl w-fit cursor-pointer">
+                            <span className='flex flex-row items-center'>Popular<svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-7 h-7"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={1}
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M9 5l7 7-7 7"
+                                />
+                            </svg>
+                            </span>
+                        </div>
+                        <Swiper
+                            modules={[Navigation]}
+                            spaceBetween={10}
+                            slidesPerView={5}
+                            slidesPerGroup={1}
+                            className="relative"
+                        >
+                            {popularTVShows.results.slice(0, 10).map((movie) => (
+                                <SwiperSlide key={movie.id} className="flex justify-center">
+                                    <MovieCard movie={movie} />
+                                </SwiperSlide>
+                            ))}
+                            <CustomLeftArrow />
+                            <CustomRightArrow />
+                        </Swiper>
                     </div>
                 </div>
             </div>
-
-            <div className="p-6 text-white font-bold text-2xl">
-                Popular Movies
-            </div>
-            <Swiper
-                modules={[Navigation]}
-                spaceBetween={5}
-                slidesPerView={5}
-                slidesPerGroup={5}
-                navigation
-                className=''
-            >
-                {popular.results.map((movie) => (
-                    <SwiperSlide key={movie.id}>
-                        <MovieCard movie={movie} />
-                    </SwiperSlide>
-                ))}
-            </Swiper>
         </AuthenticatedLayout>
     );
 }

@@ -38,11 +38,43 @@ class MovieService
         return $resultsArray;
     }
 
-    public function getPopularMovies()
+    public function getPopularMovies($page)
     {
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('TMDB_API_KEY'),
-        ])->get("{$this->baseUrl}/movie/popular");
+        ])->get("{$this->baseUrl}/discover/movie", [
+            'page' => $page,
+            'include_null_first_air_dates' => false,
+            'sort_by' => 'popularity.desc',
+            'with_original_language' => 'en'
+        ]);
+
+        return $response->json();
+    }
+
+    public function getMovieDetails($movie_id)
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('TMDB_API_KEY'),
+        ])->get("{$this->baseUrl}/movie/{$movie_id}");
+
+        return $response->json();
+    }
+
+    public function getTVShows($page)
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('TMDB_API_KEY'),
+        ])->get("{$this->baseUrl}/discover/tv", [
+            'include_adult' => 'false',
+            'include_null_first_air_dates' => 'false',
+            'language' => 'en-US',
+            'page' => $page,
+            'sort_by' => 'popularity.desc',
+            'with_original_language' => 'en',
+            'with_origin_country' => 'US',
+            'vote_count.gte' => 1000
+        ]);
 
         return $response->json();
     }

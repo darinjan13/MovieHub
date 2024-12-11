@@ -1,19 +1,22 @@
-import React from 'react'
+import React from 'react';
 
-export default function DashboardMovieDisplay({ movie }) {
-
+export default function DashboardMovieDisplay({ movie, index }) {
     return (
-        <div className="text-white">
+        <div className="relative text-white h-[400px] sm:h-[600px] overflow-hidden">
             {/* Image */}
             <img
                 src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`} // Replace with your image URL
-                alt="The Elusive Samurai"
+                alt={movie?.name || movie?.original_title || "Movie Image"}
+                className="w-full h-full object-cover"
             />
             {/* Overlay */}
             <div className="absolute top-0 left-0 w-full h-full bg-black/40 flex items-end sm:items-center px-8">
                 <div className="text-left">
-                    <div className='ml-4 sm:ml-20'>
-                        <h1 className="sm:text-3xl font-bold">{movie?.name ? movie?.name : movie?.original_title}</h1>
+                    <div className="ml-4 sm:ml-20">
+                        <h1 className="mb-5 font-bold text-2xl">#{index + 1} Trending</h1>
+                        <h1 className="sm:text-3xl font-bold">
+                            {movie?.name ? movie?.name : movie?.original_title}
+                        </h1>
                         <div className="hidden sm:flex items-center space-x-3 text-gray-400 text-sm mt-3">
                             <span className="uppercase">📺 {movie.media_type}</span>
                             <span>📅 {movie.release_date || movie.first_air_date}</span>
@@ -31,6 +34,5 @@ export default function DashboardMovieDisplay({ movie }) {
                 </div>
             </div>
         </div>
-
     );
 }

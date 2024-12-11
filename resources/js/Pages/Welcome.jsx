@@ -6,25 +6,13 @@ import 'swiper/swiper-bundle.css';
 import MovieModal from '@/Components/MovieModal';
 import Plans from '@/Components/Plans';
 
-const Home = ({ trending, plans }) => {
+const Home = ({ plans }) => {
     const user = usePage().props.auth.user;
     let [isOpen, setIsOpen] = useState(false)
     const [selectedMovie, setSelectedMovie] = useState(null);
 
     const prices = [29.99, 99.99]
 
-    useEffect(() => {
-        new Swiper('.swiper', {
-            spaceBetween: 10,
-            slidesPerView: 10,
-            slidesPerGroup: 5,
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            loop: false,
-        });
-    }, [trending]);
     const [email, setEmail] = useState(null);
     const handleSubmit = (e) => {
         e.preventDefault();

@@ -2,12 +2,12 @@ import { Inertia } from '@inertiajs/inertia';
 import { useState } from 'react';
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle, Description } from '@headlessui/react';
 
-export default function Create({ isOpen, onClose, movie }) {
+export default function Create({ isOpen, onClose, user_id }) {
     const [profileName, setProfileName] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        Inertia.post('/profiles', { profile_name: profileName });
+        Inertia.post(route('profiles.store', { user_id: user_id, profile_name: profileName }));
     };
 
     return (

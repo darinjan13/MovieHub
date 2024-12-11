@@ -31,6 +31,7 @@ class ProfilesController extends Controller
      */
     public function store(Request $request)
     {
+        $user_id = Auth::id();
         $request->validate([
             'profile_name' => 'required|string|max:255',
         ]);
@@ -39,7 +40,7 @@ class ProfilesController extends Controller
             'profile_name' => $request->profile_name,
         ]);
 
-        return redirect()->route('profiles.index')->with('success', 'Profile created successfully!');
+        return redirect()->route('profiles.index', ['user_id' => $user_id]);
     }
 
     /**
