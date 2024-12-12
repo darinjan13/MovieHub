@@ -1,4 +1,3 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
@@ -6,11 +5,10 @@ import { Inertia } from '@inertiajs/inertia';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
-export default function AuthenticatedLayout({ children, subscribed, profilePage }) {
+export default function AuthenticatedLayout({ children, subscribed, profilePage, profileId }) {
 
     const user = usePage().props.auth.user;
-    const { profileId } = usePage().props
-    // const [profileId, setProfileId] = useState(null);
+    // const { profileId } = usePage().props
     console.log(user);
 
 

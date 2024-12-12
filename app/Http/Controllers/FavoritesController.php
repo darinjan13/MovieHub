@@ -14,4 +14,9 @@ class FavoritesController extends Controller
             'profile_id' => $profile_id,
         ]);
     }
+
+    public function store(Request $request)
+    {
+        return true;
+    }
 }

@@ -23,7 +23,7 @@ export default function DashboardMovieDisplay({ movie, index }) {
                         </div>
                         <p className="mt-4 hidden sm:block text-gray-300">{movie?.overview}</p>
                     </div>
-                    <div className="flex space-x-4 mt-4 sm:mt-6 sm:ml-20 w-full">
+                    <div className="flex space-x-4 mt-4 sm:mt-6 sm:ml-20 w-full p-10 sm:p-0">
                         <button className="bg-pink-500 text-white text-xs md:text-lg px-10 rounded-full hover:bg-pink-600">
                             Watch Now
                         </button>

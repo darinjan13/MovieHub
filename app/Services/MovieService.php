@@ -24,18 +24,12 @@ class MovieService
             'Authorization' => 'Bearer ' . env('TMDB_API_KEY'),
         ])->get("{$this->baseUrl}/trending/all/day");
 
-        if ($response->failed()) {
-            throw new \Exception('TMDB API Error: ' . $response->body());
-        }
-
         $results = collect($response->json()['results'] ?? [])
             ->filter(fn($item) => isset($item['backdrop_path']) && !empty($item['backdrop_path']));
 
-        // Convert the collection to an array
-        $resultsArray = $results->toArray();
+        // $resultsArray = $results->toArray();
 
-        // Now, $resultsArray is a plain PHP array
-        return $resultsArray;
+        return $results;
     }
 
     public function getPopularMovies($page)
@@ -52,16 +46,30 @@ class MovieService
         return $response->json();
     }
 
+    public function getSimilarMovies($movie_id)
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('TMDB_API_KEY'),
+        ])->get("{$this->baseUrl}/movie/{$movie_id}/similar");
+
+        $results = collect($response->json()['results'] ?? [])
+            ->filter(fn($item) => isset($item['backdrop_path']) && !empty($item['backdrop_path']) && $item['vote_count'] > 1)
+            ->values()
+            ->toArray();
+
+        return $results;
+    }
+
     public function getMovieDetails($movie_id)
     {
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('TMDB_API_KEY'),
-        ])->get("{$this->baseUrl}/movie/{$movie_id}");
+        ])->get("{$this->baseUrl}/movie/{$movie_id}?append_to_response=videos");
 
         return $response->json();
     }
 
-    public function getTVShows($page)
+    public function getPopularTv($page)
     {
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('TMDB_API_KEY'),
@@ -75,6 +83,38 @@ class MovieService
             'with_origin_country' => 'US',
             'vote_count.gte' => 1000
         ]);
+
+        return $response->json();
+    }
+
+    public function getSimilarTv($tv_id)
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('TMDB_API_KEY'),
+        ])->get("{$this->baseUrl}/tv/{$tv_id}/similar");
+
+        $results = collect($response->json()['results'] ?? [])
+            ->filter(fn($item) => isset($item['backdrop_path']) && !empty($item['backdrop_path']) && $item['vote_count'] > 1)
+            ->values()
+            ->toArray();
+
+        return $results;
+    }
+
+    public function getTvDetails($tv_id)
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('TMDB_API_KEY'),
+        ])->get("{$this->baseUrl}/tv/{$tv_id}?append_to_response=videos,external_ids");
+
+        return $response->json();
+    }
+
+    public function getTvEpisode($tv_id, $season_number, $episode_number)
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('TMDB_API_KEY'),
+        ])->get("{$this->baseUrl}/tv/{$tv_id}?append_to_response=external_ids,season/1/episode/1");
 
         return $response->json();
     }

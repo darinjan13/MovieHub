@@ -1,39 +1,40 @@
 import MovieCard from "@/Components/MovieCard";
+import TvCard from "@/Components/TvCard";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Inertia } from "@inertiajs/inertia";
+import { Head, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
-const Details = ({ movieDetails, similarMovies }) => {
-    console.log(movieDetails);
+const Details = ({ tvDetails, similarTv }) => {
+    const props = usePage()
+    console.log(props);
 
-    console.log(similarMovies);
 
     const [trailerId, setTrailerId] = useState(null);
 
     useEffect(() => {
         let foundTrailer = false;
 
-        movieDetails?.videos.results.forEach(video => {
+        tvDetails?.videos.results.forEach(video => {
             if (video.name === "Official Trailer") {
                 setTrailerId(video.key);
                 foundTrailer = true;
             }
         });
 
-        if (!foundTrailer && movieDetails?.videos.results.length > 0) {
-            setTrailerId(movieDetails.videos.results[0].key);
-            console.log(movieDetails.videos.results[0].key);
-
+        if (!foundTrailer && tvDetails?.videos.results.length > 0) {
+            setTrailerId(tvDetails.videos.results[0].key);
         }
-    }, [movieDetails])
+    }, [tvDetails])
 
 
-    const handleWatchNow = (movie_id) => {
-        Inertia.get(route('watch.movie', { movie_id: movie_id }))
+    const handleWatchNow = (tv_id, season_number, episode_number) => {
+        Inertia.get(route('watch.tv', { tv_id: tv_id, season_number: season_number, episode_number: episode_number }))
     }
 
     return (
         <AuthenticatedLayout>
+            <Head title={tvDetails.original_name} />
             <div className="bg-gray-800 text-white">
                 <div className="p-4 sm:p-10 flex flex-col sm:flex-row items-center space-x-6 sm:h-screen">
                     <div className="sm:w-full mb-6 sm:mb-0">
@@ -43,28 +44,28 @@ const Details = ({ movieDetails, similarMovies }) => {
                     </div>
 
                     <div className="w-full sm:w-2/3">
-                        <h1 className="text-3xl sm:text-4xl font-bold mb-4">{movieDetails.title}</h1>
-                        <p className="text-lg text-gray-400 mb-4">{movieDetails.tagline}</p>
-                        <p className="text-sm text-gray-300 mb-4">{movieDetails.overview}</p>
+                        <h1 className="text-3xl sm:text-4xl font-bold mb-4">{tvDetails.name}</h1>
+                        <p className="text-lg text-gray-400 mb-4">{tvDetails.tagline}</p>
+                        <p className="text-sm text-gray-300 mb-4">{tvDetails.overview}</p>
 
                         <div className="text-sm text-gray-400 mb-6">
                             <p>
                                 <span className="font-semibold">Genres: </span>
-                                {movieDetails.genres.map(genre => genre.name).join(', ')}
+                                {tvDetails.genres.map(genre => genre.name).join(', ')}
                             </p>
                             <p>
-                                <span className="font-semibold">Status: </span>{movieDetails.status}
+                                <span className="font-semibold">Status: </span>{tvDetails.status}
                             </p>
                             <p>
-                                <span className="font-semibold">Premiered: </span>{movieDetails.release_date}
+                                <span className="font-semibold">Premiered: </span>{tvDetails.first_air_date}
                             </p>
                             <p>
-                                <span className="font-semibold">Duration: </span>{movieDetails.runtime} minutes
+                                <span className="font-semibold">Seasons: </span>{tvDetails.number_of_seasons}
                             </p>
                         </div>
 
                         <div className="flex space-x-4">
-                            <button onClick={() => handleWatchNow(movieDetails.imdb_id)} className="bg-pink-600 hover:bg-pink-700 text-white py-2 px-6 rounded-lg">
+                            <button onClick={() => handleWatchNow(tvDetails.id, 1, 1)} className="bg-pink-600 hover:bg-pink-700 text-white py-2 px-6 rounded-lg">
                                 Watch Now
                             </button>
                             <button className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-lg">
@@ -74,12 +75,12 @@ const Details = ({ movieDetails, similarMovies }) => {
                     </div>
                 </div>
                 <div className="bg-gray-900">
-                    <h1 className="font-bold text-2xl sm:px-10 pt-10 px-5">Similar Movies</h1>
+                    <h1 className="font-bold text-2xl sm:px-10 pt-10 px-5">Similar tvs</h1>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 p-1">
-                        {similarMovies.map((movie) => (
-                            <div key={movie.id} className="flex flex-col justify-center m-1 sm:m-5 hover:scale-110">
-                                <MovieCard movie={movie} />
-                                <h1 className='mt-1 text-white overflow-hidden text-ellipsis whitespace-nowrap'>{movie.title}</h1>
+                        {similarTv.map((tv) => (
+                            <div key={tv.id} className="flex flex-col justify-center m-1 sm:m-5 hover:scale-110">
+                                <TvCard tv={tv} />
+                                <h1 className='mt-1 text-white overflow-hidden text-ellipsis whitespace-nowrap'>{tv.title}</h1>
                             </div>
                         ))}
                     </div>

@@ -13,10 +13,9 @@ class DashboardController extends Controller
 {
     public function index($profileId, MovieService $movieService)
     {
-        // Find the profile by ID, assuming it's valid and belongs to the logged-in user
         $trendings = $movieService->getTrending();
         $popularMovies = $movieService->getPopularMovies(1);
-        $popularTVShows = $movieService->getTVShows(1);
+        $popularTVShows = $movieService->getPopularTv(1);
         $profile = Profile::where('profile_id', $profileId)
             ->where('user_id', Auth::id())
             ->first();

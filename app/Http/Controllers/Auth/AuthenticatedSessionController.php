@@ -53,7 +53,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('subscription.plans');
         }
 
-        return redirect()->intended(route('profiles.index', absolute: false));
+        return redirect()->intended(route('profiles.index', ['user_id' => Auth::id()]));
     }
 
     /**
