@@ -1,15 +1,10 @@
 import { Head, usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
-import Swiper from 'swiper/bundle';
-import 'swiper/swiper-bundle.css';
-import MovieModal from '@/Components/MovieModal';
 import Plans from '@/Components/Plans';
 
 const Home = ({ plans }) => {
     const user = usePage().props.auth.user;
-    let [isOpen, setIsOpen] = useState(false)
-    const [selectedMovie, setSelectedMovie] = useState(null);
 
     const prices = [29.99, 99.99]
 
@@ -19,11 +14,6 @@ const Home = ({ plans }) => {
         if (email) {
             Inertia.get('/login', { email });
         }
-    };
-
-    const handleMovieClick = (movie) => {
-        setSelectedMovie(movie);
-        setIsOpen(true);
     };
 
 
@@ -79,31 +69,8 @@ const Home = ({ plans }) => {
                             <button className="bg-[#78B3CE] hover:bg-[#C9E6F0] sm:h-full text-black px-4 xs:py-2 sm:py-4 xs:my-5 sm:my-0 xs:mx-auto sm:mx-0" onClick={() => Inertia.get('/subscription/plans')}>Finish sign up</button>
                         )}
                     </div>
-                    {/* <div className="mx-20">
-                        <h1 className="-mb-5">Trending</h1>
-                        <div className="swiper">
-                            <div className="swiper-wrapper py-10">
-                                {trending.results.map((movie) => (
-                                    <div onClick={() => handleMovieClick(movie)} key={movie.id} className="swiper-slide relative rounded-lg overflow-visible transform transition-transform duration-500 hover:shadow-lg hover:scale-105 cursor-pointer">
-                                        <MovieCard movie={movie} />
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="swiper-button-prev absolute hidden opacity-100 bg-gray-500 rounded-full inset-y-0 left-0 my-auto h-1/4 w-[30px] z-10 lg:flex items-center justify-center cursor-pointer">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.8" stroke="currentColor" className="size-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                                </svg>
-                            </div>
-                            <div className="swiper-button-next absolute hidden opacity-100 bg-gray-500 rounded-full inset-y-0 right-0 my-auto h-1/4 w-[30px] z-10 lg:flex items-center justify-center cursor-pointer">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.8" stroke="currentColor" className="size-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div> */}
                 </div>
             </div >
-            <MovieModal isOpen={isOpen} onClose={() => setIsOpen(false)} movie={selectedMovie} />
             <Plans plans={plans} prices={prices} />
         </>
     );

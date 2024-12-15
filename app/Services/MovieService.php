@@ -27,8 +27,6 @@ class MovieService
         $results = collect($response->json()['results'] ?? [])
             ->filter(fn($item) => isset($item['backdrop_path']) && !empty($item['backdrop_path']));
 
-        // $resultsArray = $results->toArray();
-
         return $results;
     }
 
@@ -50,7 +48,7 @@ class MovieService
     {
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('TMDB_API_KEY'),
-        ])->get("{$this->baseUrl}/movie/{$movie_id}/similar");
+        ])->get("{$this->baseUrl}/movie/{$movie_id}/recommendations");
 
         $results = collect($response->json()['results'] ?? [])
             ->filter(fn($item) => isset($item['backdrop_path']) && !empty($item['backdrop_path']) && $item['vote_count'] > 1)
@@ -91,7 +89,7 @@ class MovieService
     {
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('TMDB_API_KEY'),
-        ])->get("{$this->baseUrl}/tv/{$tv_id}/similar");
+        ])->get("{$this->baseUrl}/tv/{$tv_id}/recommendations");
 
         $results = collect($response->json()['results'] ?? [])
             ->filter(fn($item) => isset($item['backdrop_path']) && !empty($item['backdrop_path']) && $item['vote_count'] > 1)
@@ -110,12 +108,18 @@ class MovieService
         return $response->json();
     }
 
-    public function getTvEpisode($tv_id, $season_number, $episode_number)
+    public function getDetails($content_id, $type)
     {
+        $endpoint = $type === 'movie' ? "movie/{$content_id}" : "tv/{$content_id}";
+
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('TMDB_API_KEY'),
-        ])->get("{$this->baseUrl}/tv/{$tv_id}?append_to_response=external_ids,season/1/episode/1");
+        ])->get("https://api.themoviedb.org/3/{$endpoint}");
 
-        return $response->json();
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        return abort(404, ucfirst($type) . ' not found.');
     }
 }

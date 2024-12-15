@@ -16,6 +16,15 @@ class DashboardController extends Controller
         $trendings = $movieService->getTrending();
         $popularMovies = $movieService->getPopularMovies(1);
         $popularTVShows = $movieService->getPopularTv(1);
+
+        $activeProfile = Profile::where('user_id', Auth::id())
+            ->where('is_active', true)
+            ->first();
+
+        if (!$activeProfile) {
+            return redirect()->route('profiles.index');
+        }
+
         $profile = Profile::where('profile_id', $profileId)
             ->where('user_id', Auth::id())
             ->first();
@@ -24,12 +33,12 @@ class DashboardController extends Controller
             return redirect()->route('profiles.index');
         }
 
-
         return inertia('Dashboard', [
             'subscribed' => Auth::user()->subscription_plan_id,
             'trendings' => $trendings,
             'popularMovies' => $popularMovies,
-            'popularTVShows' => $popularTVShows
+            'popularTVShows' => $popularTVShows,
+            'activeProfile' => $activeProfile
         ]);
     }
 }

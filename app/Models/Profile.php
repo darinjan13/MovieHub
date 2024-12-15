@@ -9,7 +9,8 @@ class Profile extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'profile_name'];
+    protected $primaryKey = 'profile_id';
+    protected $fillable = ['user_id', 'profile_name', 'is_active'];
 
     public function user()
     {
@@ -18,6 +19,6 @@ class Profile extends Model
 
     public function favorites()
     {
-        return $this->hasMany(Favorite::class);
+        return $this->hasMany(Favorite::class, 'profile_id');
     }
 }

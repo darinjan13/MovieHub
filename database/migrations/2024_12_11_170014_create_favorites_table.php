@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('favorites', function (Blueprint $table) {
             $table->id('favorite_id');
-            $table->integer('movie_id');
-            $table->string('movie_title');
+            $table->integer('content_id');
+            $table->string('content_title');
+            $table->string('type');
             $table->unsignedBigInteger('profile_id');
             $table->foreign('profile_id')->references('profile_id')->on('profiles')->onDelete('cascade');
-
             $table->timestamps();
         });
     }

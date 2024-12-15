@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Profile;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,22 +17,43 @@ class EnsureSubscription
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check()) {
-            $isSubscribed = Auth::user()->subscription_plan_id;
-            $hasProfiles = Auth::user()->profiles()->count() > 0;
-            $user_id = Auth::id();
-
-            if ($request->routeIs('subscription.plans', 'welcome') && $isSubscribed) {
-                return redirect()->route('profiles.index', ['user_id' => $user_id]);
-            }
-
-            if (in_array($request->route()->getName(), ['dashboard', 'subscription.subscribe', 'profiles.index', 'settings.edit']) && !$isSubscribed) {
-                return redirect()->route('subscription.plans');
-            }
-            if ($request->routeIs('dashboard') && !$hasProfiles && $isSubscribed) {
-                return redirect()->route('profiles.index');
-            }
+        if (!Auth::check()) {
+            return $next($request);
         }
+
+        $user = Auth::user();
+        $isSubscribed = $user->subscription_plan_id;
+        $hasProfiles = $user->profiles()->count() > 0;
+        $activeProfile = $user->profiles()->where('is_active', true)->first();
+
+        if (in_array($request->route()->getName(), ['welcome', 'subscription.plans']) && $isSubscribed) {
+            return redirect()->route('dashboard', [$activeProfile->profile_id]);
+        }
+
+        if ($request->routeIs('dashboard') && !$isSubscribed) {
+            return redirect()->route('subscription.plans');
+        }
+
+        if (!$hasProfiles && $isSubscribed && $request->routeIs('dashboard')) {
+            return redirect()->route('profiles.index', ['user_id' => $user->id]);
+        }
+
+        if ($request->routeIs('profiles.index') && $activeProfile) {
+            return redirect()->route('dashboard', [$activeProfile->profile_id]);
+        }
+
+        if ($request->routeIs('dashboard') && !$activeProfile) {
+            return redirect()->route('profiles.index', ['user_id' => $user->id]);
+        }
+
+        if (in_array($request->route()->getName(), ['dashboard', 'subscription.subscribe', 'profiles.index', 'settings.edit']) && !$isSubscribed) {
+            return redirect()->route('subscription.plans');
+        }
+
+        if ($request->routeIs('welcome') && !$isSubscribed) {
+            return redirect()->route('subscription.plans');
+        }
+
 
         return $next($request);
     }

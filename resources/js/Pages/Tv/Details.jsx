@@ -5,14 +5,13 @@ import { Inertia } from "@inertiajs/inertia";
 import { Head, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
-const Details = ({ tvDetails, similarTv }) => {
-    const props = usePage()
-    console.log(props);
-
-
+const Details = ({ tvDetails, similarTv, activeProfile, existingFavorite }) => {
     const [trailerId, setTrailerId] = useState(null);
+    const [isFavorite, setIsFavorite] = useState(false);
+
 
     useEffect(() => {
+        setIsFavorite(existingFavorite);
         let foundTrailer = false;
 
         tvDetails?.videos.results.forEach(video => {
@@ -32,8 +31,18 @@ const Details = ({ tvDetails, similarTv }) => {
         Inertia.get(route('watch.tv', { tv_id: tv_id, season_number: season_number, episode_number: episode_number }))
     }
 
+    const addToFavorites = (movie_id, movie_title, type) => {
+        Inertia.post(route('favorites.store', { content_id: movie_id, content_title: movie_title, type: type }));
+        window.location.reload
+    }
+
+    const removeFromFavorites = (movie_id) => {
+        Inertia.post(route('favorites.remove'), { content_id: movie_id });
+        window.location.reload();
+    };
+
     return (
-        <AuthenticatedLayout>
+        <AuthenticatedLayout subscribed={true} activeProfile={activeProfile}>
             <Head title={tvDetails.original_name} />
             <div className="bg-gray-800 text-white">
                 <div className="p-4 sm:p-10 flex flex-col sm:flex-row items-center space-x-6 sm:h-screen">
@@ -65,11 +74,11 @@ const Details = ({ tvDetails, similarTv }) => {
                         </div>
 
                         <div className="flex space-x-4">
-                            <button onClick={() => handleWatchNow(tvDetails.id, 1, 1)} className="bg-pink-600 hover:bg-pink-700 text-white py-2 px-6 rounded-lg">
+                            <button onClick={() => handleWatchNow(tvDetails.id, 0, 1)} className="bg-pink-600 hover:bg-pink-700 text-white py-2 px-6 rounded-lg">
                                 Watch Now
                             </button>
-                            <button className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-lg">
-                                Add to Favorites
+                            <button onClick={() => isFavorite ? removeFromFavorites(tvDetails.id) : addToFavorites(tvDetails.id, tvDetails.original_name, 'tv')} className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-lg">
+                                {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
                             </button>
                         </div>
                     </div>
@@ -80,7 +89,7 @@ const Details = ({ tvDetails, similarTv }) => {
                         {similarTv.map((tv) => (
                             <div key={tv.id} className="flex flex-col justify-center m-1 sm:m-5 hover:scale-110">
                                 <TvCard tv={tv} />
-                                <h1 className='mt-1 text-white overflow-hidden text-ellipsis whitespace-nowrap'>{tv.title}</h1>
+                                <h1 className='mt-1 text-white overflow-hidden text-ellipsis whitespace-nowrap'>{tv.name}</h1>
                             </div>
                         ))}
                     </div>

@@ -1,16 +1,20 @@
 import MovieCard from "@/Components/MovieCard";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Inertia } from "@inertiajs/inertia";
+import { Head, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
-const Details = ({ movieDetails, similarMovies }) => {
-    console.log(movieDetails);
+const Details = ({ movieDetails, similarMovies, activeProfile, existingFavorite }) => {
 
-    console.log(similarMovies);
+    const user = usePage().props
 
     const [trailerId, setTrailerId] = useState(null);
+    const [isFavorite, setIsFavorite] = useState(false);
+
 
     useEffect(() => {
+
+        setIsFavorite(existingFavorite);
         let foundTrailer = false;
 
         movieDetails?.videos.results.forEach(video => {
@@ -22,18 +26,27 @@ const Details = ({ movieDetails, similarMovies }) => {
 
         if (!foundTrailer && movieDetails?.videos.results.length > 0) {
             setTrailerId(movieDetails.videos.results[0].key);
-            console.log(movieDetails.videos.results[0].key);
 
         }
     }, [movieDetails])
-
 
     const handleWatchNow = (movie_id) => {
         Inertia.get(route('watch.movie', { movie_id: movie_id }))
     }
 
+    const addToFavorites = (movie_id, movie_title, type) => {
+        Inertia.post(route('favorites.store', { content_id: movie_id, content_title: movie_title, type: type }));
+        window.location.reload
+    }
+
+    const removeFromFavorites = (movie_id) => {
+        Inertia.post(route('favorites.remove'), { content_id: movie_id });
+        window.location.reload();
+    };
+
     return (
-        <AuthenticatedLayout>
+        <AuthenticatedLayout subscribed={true} activeProfile={activeProfile}>
+            <Head title={movieDetails.original_title} />
             <div className="bg-gray-800 text-white">
                 <div className="p-4 sm:p-10 flex flex-col sm:flex-row items-center space-x-6 sm:h-screen">
                     <div className="sm:w-full mb-6 sm:mb-0">
@@ -67,8 +80,8 @@ const Details = ({ movieDetails, similarMovies }) => {
                             <button onClick={() => handleWatchNow(movieDetails.imdb_id)} className="bg-pink-600 hover:bg-pink-700 text-white py-2 px-6 rounded-lg">
                                 Watch Now
                             </button>
-                            <button className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-lg">
-                                Add to Favorites
+                            <button onClick={() => isFavorite ? removeFromFavorites(movieDetails.id) : addToFavorites(movieDetails.id, movieDetails.original_title, 'movie')} className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-lg">
+                                {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
                             </button>
                         </div>
                     </div>

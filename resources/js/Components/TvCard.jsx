@@ -2,8 +2,6 @@ import { Inertia } from "@inertiajs/inertia";
 
 const TvCard = ({ tv }) => {
     const handleImageClick = (tvId) => {
-        console.log(tvId);
-
         Inertia.get(route('details.tv', { tv_id: tvId }))
     }
     return (

@@ -5,12 +5,10 @@ import { Inertia } from '@inertiajs/inertia';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
-export default function AuthenticatedLayout({ children, subscribed, profilePage, profileId }) {
+export default function AuthenticatedLayout({ children, subscribed, activeProfile }) {
 
     const user = usePage().props.auth.user;
-    // const { profileId } = usePage().props
-    console.log(user);
-
+    console.log(activeProfile);
 
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -23,27 +21,27 @@ export default function AuthenticatedLayout({ children, subscribed, profilePage,
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="flex shrink-0 items-center md:ml-10">
-                                <Link href={profileId ? route('dashboard', { profileId: profileId }) : route("profiles.index", { user_id: user.id })}>
+                                <Link href={activeProfile ? route('dashboard', { profileId: activeProfile.profile_id }) : route("profiles.index", { user_id: user.id })}>
+                                    {/* <Link href={route('dashboard', { profileId: activeProfile.profile_id })}> */}
                                     <img className="block h-9 w-auto fill-current" src="/assets/images/logo.png" alt="Logo" />
                                 </Link>
                             </div>
-                            {(subscribed && !profilePage && profileId) && (
+                            {subscribed && activeProfile && (
                                 <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex text-white">
                                     <NavLink
-                                        href={route('dashboard', { profileId: profileId })}
+                                        href={route('dashboard', { profileId: activeProfile.profile_id })}
                                         active={route().current('dashboard')}
                                     >
                                         Browse
                                     </NavLink>
                                     <NavLink
-                                        href={route('profiles.index')}
-                                        active={route().current('profiles')}
+                                        href={route('favorites.index', { user_id: user.id, profile_name: activeProfile.profile_name })}
+                                        active={route().current('favorites.index')}
                                     >
                                         Favorites
                                     </NavLink>
                                 </div>
                             )}
-
                         </div>
 
                         <div className="hidden sm:ms-6 sm:flex sm:items-center ">
@@ -75,12 +73,15 @@ export default function AuthenticatedLayout({ children, subscribed, profilePage,
                                         </Dropdown.Trigger>
 
                                         <Dropdown.Content>
-                                            <Dropdown.Link
-                                                href={route('profiles.index', { user_id: user.id })}
-                                            >
-                                                Profiles
-                                            </Dropdown.Link>
-                                            {!profileId && (
+                                            {activeProfile ? (
+                                                <Dropdown.Link
+                                                    href={route('profiles.destroy', { user_id: user.id, profileId: activeProfile.profile_id })}
+                                                    method="delete"
+                                                    as="button"
+                                                >
+                                                    Change Profile
+                                                </Dropdown.Link>
+                                            ) : (
                                                 <Dropdown.Link
                                                     href={route('settings.edit')}
                                                 >
@@ -151,9 +152,9 @@ export default function AuthenticatedLayout({ children, subscribed, profilePage,
                         ' sm:hidden bg-gray-300 hover:bg-gray-100'
                     }
                 >
-                    {profileId && (
+                    {activeProfile && (
                         <ResponsiveNavLink
-                            href={route('dashboard', { profileId: profileId })}
+                            href={route('dashboard', { profileId: activeProfile.profile_id })}
                             active={route().current('dashboard')}
                         >
                             Dashboard

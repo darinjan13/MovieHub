@@ -1,9 +1,7 @@
 import DashboardMovieDisplay from '@/Components/DashboardMovieDisplay';
 import MovieCard from '@/Components/MovieCard';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
-// import Swiper from 'swiper/bundle';
+import { Head } from '@inertiajs/react';
 import 'swiper/swiper-bundle.css';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -11,12 +9,13 @@ import { Navigation } from 'swiper/modules';
 import { CustomLeftArrow, CustomRightArrow } from '@/Components/CustomArrows';
 import TvCard from '@/Components/TvCard';
 
-export default function Dashboard({ subscribed, trendings, popularMovies, popularTVShows }) {
-    console.log(popularTVShows.results);
+export default function Dashboard({ subscribed, trendings, popularMovies, popularTVShows, activeProfile }) {
+    console.log(trendings);
 
     return (
         <AuthenticatedLayout
             subscribed={subscribed}
+            activeProfile={activeProfile}
         >
             <Head title="Dashboard" />
             <div className='pb-10'>

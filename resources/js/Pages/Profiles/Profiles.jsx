@@ -9,16 +9,16 @@ export default function Profiles() {
 
     const user = usePage().props.auth.user;
 
-    console.log(user);
     const [isModalOpen, setIsModalOpen] = useState(false); // State for controlling modal visibility
     let [isOpen, setIsOpen] = useState(false)
 
     const profileDashboard = (profileId) => {
-        Inertia.visit(`/dashboard/${profileId}`);
+        Inertia.put(route('profiles.update', { user_id: user.id, profileId: profileId }))
+        // Inertia.visit(`/dashboard/${profileId}`);
     }
 
     const openModal = () => {
-        setIsOpen(true); // Open the modal
+        setIsOpen(true);
     };
 
     return (

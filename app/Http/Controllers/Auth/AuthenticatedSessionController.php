@@ -26,11 +26,11 @@ class AuthenticatedSessionController extends Controller
 
             if ($userExists) {
                 return Inertia::render('Auth/Login', [
-                    'email' => $email, // Pass the email to the Login page
+                    'email' => $email,
                 ]);
             } else {
                 return Inertia::render('Auth/Register', [
-                    'email' => $email, // Pass the email to the Register page
+                    'email' => $email,
                 ]);
             }
         }

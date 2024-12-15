@@ -19,11 +19,10 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->unsignedBigInteger('subscription_plan_id')->nullable(); // Add subscription_plan_id directly
+            $table->unsignedBigInteger('subscription_plan_id')->nullable();
             $table->timestamps();
         });
 
-        // Now add the foreign key constraint on subscription_plan_id
         Schema::table('users', function (Blueprint $table) {
             $table->foreign('subscription_plan_id')
                 ->references('id')
@@ -31,7 +30,6 @@ return new class extends Migration
                 ->onDelete('cascade');
         });
 
-        // Other tables (password_reset_tokens and sessions)
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');

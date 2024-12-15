@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('profiles', function (Blueprint $table) {
             $table->id('profile_id');
             $table->string('profile_name');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Foreign key referencing users table
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->boolean('is_active');
             $table->timestamps();
         });
     }

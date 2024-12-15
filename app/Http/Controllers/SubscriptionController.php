@@ -36,6 +36,6 @@ class SubscriptionController extends Controller
 
         // Mail::to($user->email)->send(new SubscriptionSuccessMail($user->name, $plan->name));
 
-        return redirect()->route('profiles.index');
+        return redirect()->route('profiles.index', ['user_id' => Auth::id()]);
     }
 }

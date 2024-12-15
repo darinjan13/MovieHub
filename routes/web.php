@@ -32,11 +32,7 @@ Route::middleware(['auth', 'verified', EnsureSubscription::class])->group(functi
     Route::get('/dashboard/{profileId}', [DashboardController::class, 'index'])->name('dashboard');
 
     // Profile routes
-    Route::resource('{user_id}/profiles', ProfilesController::class);
-    // Route::get('/{user_id}/profiles', [ProfilesController::class, 'index'])->name('profiles.index');
-    // Route::get('/profile', [ProfilesController::class, 'create'])->name('profile.create');
-    // Route::post('/profiles', [ProfilesController::class, 'store'])->name('profile.store');
-    // Route::delete('/profiles/{profile}', [ProfilesController::class, 'destroy'])->name('profile.destroy');
+    Route::resource('{user_id}/profiles', ProfilesController::class)->parameters(['profiles' => 'profileId']);
 
     // Subscription routes
     Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe');
@@ -49,6 +45,9 @@ Route::middleware(['auth', 'verified', EnsureSubscription::class])->group(functi
 
     //Favorites Routes
     Route::get('/favorites/{user_id}/{profile_name}', [FavoritesController::class, 'index'])->name('favorites.index');
+    Route::post('/favorites/store', [FavoritesController::class, 'store'])->name('favorites.store');
+    Route::post('/favorites/remove', [FavoritesController::class, 'remove'])->name('favorites.remove');
+
 
     //Movies Routes
     Route::get('/movies/popular/{page}', [MoviesController::class, 'index'])->name('popular.movies');
